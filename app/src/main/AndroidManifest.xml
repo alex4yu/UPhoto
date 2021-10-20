@@ -13,6 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UPhoto">
         <activity
+            android:name=".EditScreen"
+            android:exported="true"
+            android:label="@string/title_activity_edit_screen"
+            android:theme="@style/Theme.UPhoto.NoActionBar" />
+        <activity
             android:name=".SelectPhoto"
             android:exported="true" />
         <activity
