@@ -13,19 +13,32 @@ import android.os.Build
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.util.Log
+import android.widget.Button
 import java.io.IOException
 
 import android.widget.ImageView
 
 
 public const val PICK_PHOTO_CODE = 1046
+private const val TAG = "editscreen"
 class SelectPhoto : AppCompatActivity() {
     private lateinit var ivPreview: ImageView
+    private lateinit var nextButton: Button
+    private lateinit var imageBit: Bitmap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_photo)
         ivPreview = findViewById(R.id.ivPreview)
+        nextButton = findViewById(R.id.next_button)
         onPickPhoto(ivPreview)
+        nextButton.setOnClickListener{
+            Log.d(TAG, "next clicked")
+            val Intent = EditScreen.newIntent(this, imageBit)
+            Log.d(TAG, "intent created")
+            startActivity(Intent)
+            Log.d(TAG, "editscreen started")
+        }
     }
     fun onPickPhoto(view: View?) {
         // Create intent for picking a photo from the gallery
@@ -45,7 +58,7 @@ class SelectPhoto : AppCompatActivity() {
         var image: Bitmap? = null
         try {
             // check version of Android on device
-            image = if (Build.VERSION.SDK_INT > 27) {
+            image =    if (Build.VERSION.SDK_INT > 27) {
                 // on newer versions of Android, use the new decodeBitmap method
                 val source: ImageDecoder.Source =
                     ImageDecoder.createSource(this.contentResolver, photoUri)
@@ -56,6 +69,9 @@ class SelectPhoto : AppCompatActivity() {
             }
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+        if (image != null) {
+            imageBit=image
         }
         return image
     }
@@ -72,5 +88,6 @@ class SelectPhoto : AppCompatActivity() {
             ivPreview.setImageBitmap(selectedImage)
         }
     }
+
 
 }
