@@ -22,7 +22,7 @@ import java.io.IOException
 
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-
+import com.google.android.material.slider.Slider
 
 
 private const val TAG = "main_activity"
@@ -30,6 +30,7 @@ class SelectPhoto : Fragment() {
     private lateinit var ivPreview: ImageView
     private lateinit var nextButton: Button
     private lateinit var bitmap: Bitmap
+
     private var dataPasser: OnDataPass? = null
 
     override fun onAttach(context: Context) {
