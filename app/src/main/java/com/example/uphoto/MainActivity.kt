@@ -1,6 +1,9 @@
 package com.example.uphoto
 
 
+
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -10,10 +13,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import java.io.IOException
+import android.os.Environment
+import java.io.File
+import java.io.File.separator
+import java.io.FileOutputStream
+import java.io.OutputStream
+import java.lang.Exception
+
 
 private const val TAG = "main_activity"
 private const val PICK_PHOTO_CODE = 1
@@ -51,6 +59,8 @@ class MainActivity : AppCompatActivity(), OnDataPass {
     override fun passBit(bitmap: Bitmap) {
         currentimage = bitmap
     }
+
+
     fun newScreen(new: String){
         if(new.equals("select screen"))
         {

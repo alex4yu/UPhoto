@@ -22,6 +22,19 @@ import android.graphics.Bitmap
 import kotlin.math.ln
 import android.R.color
 import android.provider.MediaStore
+import android.provider.MediaStore.Images
+
+import android.content.ContentValues
+
+import android.content.ContentResolver
+
+import android.content.ContentUris
+import android.content.Context
+import android.net.Uri
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.OutputStream
+import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,11 +53,14 @@ class EditMain : Fragment() {
     private lateinit var image: ImageView
     //private lateinit var brighten: Button
     private lateinit var bitmap: Bitmap
+    private lateinit var bitcheckpoint: Bitmap
     private lateinit var ogImage: Bitmap
-    private lateinit var slider: Slider
+    private lateinit var brightnessSlider: Slider
+    private lateinit var contrastSlider: Slider
     private lateinit var contrastbutton: ImageButton
     private lateinit var brightnessbutton: ImageButton
     private lateinit var savebutton: Button
+
     private var brightnessSelected: Boolean = true
     private var height: Int = 0
     private var width: Int = 0
@@ -63,22 +79,39 @@ class EditMain : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_edit_main, container, false)
         image = view.findViewById(R.id.imageView)
-        slider = view.findViewById(R.id.slider)
+        brightnessSlider = view.findViewById(R.id.brightnessslider)
+        contrastSlider = view.findViewById(R.id.contrastslider)
         savebutton = view.findViewById(R.id.save_button)
-        slider.addOnChangeListener{slider, value, fromUser->
+        brightnessSlider.addOnChangeListener{Slider, value, fromUser->
             editimage(value)
         }
+        contrastSlider.addOnChangeListener{Slider, value, fromUser->
+            editimage(value)
+        }
+        contrastSlider.setVisibility(View.INVISIBLE)
         contrastbutton = view.findViewById(R.id.contrast)
         brightnessbutton = view.findViewById(R.id.brightness)
 
         contrastbutton.setOnClickListener{
+            if(brightnessSelected)
+            {
+                bitcheckpoint = bitmap
+            }
             brightnessSelected = false
+            brightnessSlider.setVisibility(View.INVISIBLE)
+            contrastSlider.setVisibility(View.VISIBLE)
         }
         brightnessbutton.setOnClickListener{
+            if(!brightnessSelected)
+            {
+                bitcheckpoint = bitmap
+            }
             brightnessSelected = true
+            contrastSlider.setVisibility(View.INVISIBLE)
+            brightnessSlider.setVisibility(View.VISIBLE)
         }
         savebutton.setOnClickListener {
-
+            context?.let { it1 -> saveImage(bitmap, it1, "Uphoto") }
         }
         
         /*brighten = view.findViewById(R.id.brightenbutton)
@@ -94,12 +127,47 @@ class EditMain : Fragment() {
             ogImage = activity.getbit()!!
         }
         bitmap = ogImage
+        bitcheckpoint = ogImage
         Log.d(TAG, "${bitmap.height}")
         height = bitmap.height
         width = bitmap.width
         image.setImageBitmap(bitmap)
         return view
+    }
 
+    private fun saveImage(bitmap: Bitmap, context: Context, folderName: String) {
+
+        val values = contentValues()
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + folderName)
+        values.put(MediaStore.Images.Media.IS_PENDING, true)
+        // RELATIVE_PATH and IS_PENDING are introduced in API 29.
+
+        val uri: Uri? = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        if (uri != null) {
+            saveImageToStream(bitmap, context.contentResolver.openOutputStream(uri))
+            values.put(MediaStore.Images.Media.IS_PENDING, false)
+            context.contentResolver.update(uri, values, null, null)
+        }
+        Log.d(TAG, "save action complete?")
+
+    }
+    private fun contentValues() : ContentValues {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        return values
+    }
+
+    private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
+        if (outputStream != null) {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                outputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
 
@@ -108,7 +176,7 @@ class EditMain : Fragment() {
     {
         if(brightnessSelected)
         {
-            brightIt(value)
+            brightIt(value*2)
         }
         else
         {
@@ -132,7 +200,7 @@ class EditMain : Fragment() {
         var y = 0
 
 
-        var bitcopy: Bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        var bitcopy: Bitmap = bitcheckpoint.copy(Bitmap.Config.ARGB_8888, true)
         while (y<height)
         {
 
@@ -188,8 +256,8 @@ class EditMain : Fragment() {
     }
     fun brightIt(fb: Float)
     {
-        val cmB = ColorMatrix()
-        cmB.set(
+
+        val cm = ColorMatrix(
             floatArrayOf(
                 1f, 0f, 0f, 0f, fb,
                 0f, 1f, 0f, 0f, fb,
@@ -197,11 +265,20 @@ class EditMain : Fragment() {
                 0f, 0f, 0f, 1f, 0f
             )
         )
-        val colorMatrix = ColorMatrix()
-        colorMatrix.set(cmB)
-        image.setColorFilter(ColorMatrixColorFilter(colorMatrix))
+
+
+        var ret: Bitmap = bitcheckpoint.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(ret)
+
+        val paint = Paint()
+        paint.colorFilter = ColorMatrixColorFilter(cm)
+        canvas.drawBitmap(ret, 0.toFloat(), 0.toFloat(), paint)
+
+        image.setImageBitmap(ret)
+        bitmap = ret
 
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
