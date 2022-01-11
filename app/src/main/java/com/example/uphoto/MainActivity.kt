@@ -16,6 +16,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import java.io.IOException
 import android.os.Environment
+import android.view.Gravity
+import android.widget.Toast
 import java.io.File
 import java.io.File.separator
 import java.io.FileOutputStream
@@ -72,6 +74,29 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             currentScreen="edit main"
             swapFrag(fragment)
             Log.d(TAG, "edit main frag")
+        }
+        else if (new.equals("basic filters"))
+        {
+            val fragment = basic_filters.newInstance()
+            currentScreen="basic filters"
+            swapFrag(fragment)
+            Log.d(TAG, "basic filters frag")
+        }
+        else if (new.equals("main menu"))
+        {
+            val toast = Toast.makeText(this,"photo saved", Toast.LENGTH_LONG )
+            toast.setGravity(Gravity.TOP, 0, 0)
+            toast.show()
+            val fragment = MainMenu.newInstance()
+            currentScreen="main menu"
+            swapFrag(fragment)
+
+        }
+        else if(new.equals("draw"))
+        {
+            val fragment = draw.newInstance()
+            currentScreen="draw"
+            swapFrag(fragment)
         }
     }
     fun swapFrag(fragment: Fragment)
