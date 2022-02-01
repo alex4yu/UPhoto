@@ -1,6 +1,7 @@
 package com.example.uphoto
 
-
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
+import jp.co.cyberagent.android.gpuimage.filter.*
 import android.content.Context
 import android.graphics.*
 import android.os.Build
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.google.android.material.slider.Slider
 import kotlin.math.ln
@@ -33,6 +35,8 @@ class basic_filters : Fragment() {
     private lateinit var brightnessbutton: ImageButton
     private lateinit var savebutton: Button
     private lateinit var cancelbutton: Button
+    private lateinit var option_text: TextView
+
 
     private var brightnessSelected: Boolean = true
     private var height: Int = 0
@@ -62,6 +66,9 @@ class basic_filters : Fragment() {
         contrastSlider = view.findViewById(R.id.contrastslider)
         savebutton = view.findViewById(R.id.save_button)
         cancelbutton = view.findViewById(R.id.canel_button)
+
+        option_text = view.findViewById(R.id.option_text)
+
         brightnessSlider.addOnChangeListener{Slider, value, fromUser->
             editimage(value)
         }
@@ -86,7 +93,9 @@ class basic_filters : Fragment() {
             }
             brightnessSelected = false
             brightnessSlider.setVisibility(View.INVISIBLE)
+            option_text.setText("Contrast")
             contrastSlider.setVisibility(View.VISIBLE)
+
         }
         brightnessbutton.setOnClickListener{
             if(!brightnessSelected)
@@ -96,6 +105,7 @@ class basic_filters : Fragment() {
             brightnessSelected = true
             contrastSlider.setVisibility(View.INVISIBLE)
             brightnessSlider.setVisibility(View.VISIBLE)
+            option_text.setText("Brightness")
         }
 
         val activity: MainActivity? = activity as MainActivity?
@@ -150,23 +160,15 @@ class basic_filters : Fragment() {
         var bitcopy: Bitmap = bitcheckpoint.copy(Bitmap.Config.ARGB_8888, true)
         while (y<height)
         {
-
             var x = 0
             while (x<width)
             {
-
                 var color: Int
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 {
-
                     color = bitcopy.getColor(x, y).toArgb()
-
-
                 }
-                else {
-                    TODO("VERSION.SDK_INT < Q")
-
-                }
+                else {TODO("VERSION.SDK_INT < Q")}
 
                 val r = color shr 16 and 0xFF
                 val g = color shr 8 and 0xFF

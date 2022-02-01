@@ -8,4 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "UPhoto"
 include ':app'
-include ':libraries:opencv'
+include ':GPUImage'
