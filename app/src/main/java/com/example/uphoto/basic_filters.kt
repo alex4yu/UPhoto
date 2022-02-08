@@ -17,7 +17,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.google.android.material.slider.Slider
-import kotlin.math.ln
+import android.graphics.BitmapFactory
+import android.graphics.PointF
+import android.opengl.Matrix
+import jp.co.cyberagent.android.gpuimage.GPUImage
 import kotlin.math.roundToInt
 
 
@@ -144,65 +147,27 @@ class basic_filters : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun contrastedit(fb:Float)
     {
-        Log.d(TAG, "enter contrastedit")
-        var c: Double = 0.0
-        if(fb <= 0)
-        {
-            c = (50.0+fb.toDouble())/50.0
+        var change = 1.toFloat()
+        if (fb == 0.toFloat()) {
         }
-        else if(fb > 0)
+        else if (fb < 0)
         {
-            c = ln(fb.toDouble()+1) /4.0+1
-        }
-        var y = 0
-
-
-        var bitcopy: Bitmap = bitcheckpoint.copy(Bitmap.Config.ARGB_8888, true)
-        while (y<height)
-        {
-            var x = 0
-            while (x<width)
-            {
-                var color: Int
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                {
-                    color = bitcopy.getColor(x, y).toArgb()
-                }
-                else {TODO("VERSION.SDK_INT < Q")}
-
-                val r = color shr 16 and 0xFF
-                val g = color shr 8 and 0xFF
-                val b = color shr 0 and 0xFF
-                val newRed = truncate(c*(r-128)+128)
-                val newBlue = truncate(c*(b-128)+128)
-                val newGreen = truncate(c*(g-128)+128)
-
-
-
-                bitcopy.setPixel(x, y, Color.rgb(newRed, newGreen, newBlue))
-
-                x++
-            }
-            y++
-        }
-        image.setImageBitmap(bitcopy)
-        bitmap = bitcopy
-    }
-    fun truncate(value: Double): Int
-    {
-        if (value<0)
-        {
-            return 0
-        }
-        else if (value > 255)
-        {
-            return 255
+            change = (fb+50)/50
         }
         else
         {
-            return value.roundToInt()
+            change = fb/20+1
         }
+        val gpuImage = GPUImage(context)
+        val contrastfilter = GPUImageContrastFilter(change)
+        gpuImage.setFilter(contrastfilter)
+
+        bitmap = gpuImage.getBitmapWithFilterApplied(bitcheckpoint)
+        image.setImageBitmap(bitmap)
+
     }
+
+
     fun brightIt(fb: Float)
     {
 
