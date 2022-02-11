@@ -17,11 +17,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.google.android.material.slider.Slider
-import android.graphics.BitmapFactory
-import android.graphics.PointF
-import android.opengl.Matrix
+
 import jp.co.cyberagent.android.gpuimage.GPUImage
-import kotlin.math.roundToInt
+
 
 
 
@@ -34,14 +32,19 @@ class basic_filters : Fragment() {
     private lateinit var ogImage: Bitmap
     private lateinit var brightnessSlider: Slider
     private lateinit var contrastSlider: Slider
+    private lateinit var saturationSlider: Slider
+    private lateinit var vibranceSlider: Slider
     private lateinit var contrastbutton: ImageButton
     private lateinit var brightnessbutton: ImageButton
+    private lateinit var saturationbutton: ImageButton
+    private lateinit var vibrancebutton: ImageButton
     private lateinit var savebutton: Button
     private lateinit var cancelbutton: Button
     private lateinit var option_text: TextView
 
 
-    private var brightnessSelected: Boolean = true
+
+    private var selectedfilter = "brightness"
     private var height: Int = 0
     private var width: Int = 0
 
@@ -67,15 +70,24 @@ class basic_filters : Fragment() {
         image = view.findViewById(R.id.imageView)
         brightnessSlider = view.findViewById(R.id.brightnessslider)
         contrastSlider = view.findViewById(R.id.contrastslider)
+        saturationSlider = view.findViewById(R.id.saturationslider)
+        vibranceSlider = view.findViewById(R.id.vibranceslider)
         savebutton = view.findViewById(R.id.save_button)
-        cancelbutton = view.findViewById(R.id.canel_button)
+        cancelbutton = view.findViewById(R.id.cancel_button)
 
         option_text = view.findViewById(R.id.option_text)
+        startup()
 
         brightnessSlider.addOnChangeListener{Slider, value, fromUser->
             editimage(value)
         }
         contrastSlider.addOnChangeListener{Slider, value, fromUser->
+            editimage(value)
+        }
+        saturationSlider.addOnChangeListener{Slider, value, fromUser->
+            editimage(value)
+        }
+        vibranceSlider.addOnChangeListener{Slider, value, fromUser->
             editimage(value)
         }
         savebutton.setOnClickListener {
@@ -88,27 +100,47 @@ class basic_filters : Fragment() {
         contrastSlider.setVisibility(View.INVISIBLE)
         contrastbutton = view.findViewById(R.id.contrast)
         brightnessbutton = view.findViewById(R.id.brightness)
-
+        saturationbutton = view.findViewById(R.id.saturation)
+        vibrancebutton = view.findViewById(R.id.vibrance)
         contrastbutton.setOnClickListener{
-            if(brightnessSelected)
+            if(!selectedfilter.equals("contrast"))
             {
                 bitcheckpoint = bitmap
+                selectedfilter = "contrast"
+                allSliderInvisible()
+                option_text.setText("Contrast")
+                contrastSlider.setVisibility(View.VISIBLE)
             }
-            brightnessSelected = false
-            brightnessSlider.setVisibility(View.INVISIBLE)
-            option_text.setText("Contrast")
-            contrastSlider.setVisibility(View.VISIBLE)
-
         }
         brightnessbutton.setOnClickListener{
-            if(!brightnessSelected)
+            if(!selectedfilter.equals("brightness"))
             {
                 bitcheckpoint = bitmap
+                selectedfilter = "brightness"
+                allSliderInvisible()
+                brightnessSlider.setVisibility(View.VISIBLE)
+                option_text.setText("Brightness")
             }
-            brightnessSelected = true
-            contrastSlider.setVisibility(View.INVISIBLE)
-            brightnessSlider.setVisibility(View.VISIBLE)
-            option_text.setText("Brightness")
+        }
+        saturationbutton.setOnClickListener{
+            if(!selectedfilter.equals("saturation"))
+            {
+                bitcheckpoint = bitmap
+                selectedfilter = "saturation"
+                allSliderInvisible()
+                option_text.setText("Saturation")
+                saturationSlider.setVisibility(View.VISIBLE)
+            }
+        }
+        vibrancebutton.setOnClickListener{
+            if(!selectedfilter.equals("vibrance"))
+            {
+                bitcheckpoint = bitmap
+                selectedfilter = "vibrance"
+                allSliderInvisible()
+                option_text.setText("Vibrance")
+                vibranceSlider.setVisibility(View.VISIBLE)
+            }
         }
 
         val activity: MainActivity? = activity as MainActivity?
@@ -126,7 +158,18 @@ class basic_filters : Fragment() {
         Log.d(TAG, "basic filter view set")
         return view
     }
-
+    private fun startup()
+    {
+        allSliderInvisible()
+        brightnessSlider.setVisibility(View.INVISIBLE)
+    }
+    private fun allSliderInvisible()
+    {
+        saturationSlider.setVisibility(View.INVISIBLE)
+        contrastSlider.setVisibility(View.INVISIBLE)
+        brightnessSlider.setVisibility(View.INVISIBLE)
+        vibranceSlider.setVisibility(View.INVISIBLE)
+    }
     private fun returnToEditMain()
     {
         dataPasser?.onDataPass("edit main")
@@ -134,14 +177,21 @@ class basic_filters : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun editimage(value: Float)
     {
-        if(brightnessSelected)
+        if(selectedfilter.equals("brightness"))
         {
             brightIt(value*2)
         }
-        else
+        else if (selectedfilter.equals("contrast"))
         {
-            Log.d(TAG, "contrast change try")
             contrastedit(value)
+        }
+        else if(selectedfilter.equals("saturation"))
+        {
+            saturationEdit(value)
+        }
+        else if(selectedfilter.equals("vibrance"))
+        {
+            vibranceEdit(value)
         }
     }
     @RequiresApi(Build.VERSION_CODES.O)
@@ -181,7 +231,7 @@ class basic_filters : Fragment() {
         )
 
 
-        var ret: Bitmap = bitcheckpoint.copy(Bitmap.Config.ARGB_8888, true)
+        val ret: Bitmap = bitcheckpoint.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(ret)
 
         val paint = Paint()
@@ -193,6 +243,25 @@ class basic_filters : Fragment() {
 
     }
 
+    fun saturationEdit(fb: Float)
+    {
+        val gpuImage = GPUImage(context)
+        val saturationFilter = GPUImageSaturationFilter((fb*0.02).toFloat()+1)
+        gpuImage.setFilter(saturationFilter)
+
+        bitmap = gpuImage.getBitmapWithFilterApplied(bitcheckpoint)
+        image.setImageBitmap(bitmap)
+    }
+
+    fun vibranceEdit(fb:Float)
+    {
+        val gpuImage = GPUImage(context)
+        val vibranceFilter = GPUImageVibranceFilter(fb/10)
+        gpuImage.setFilter(vibranceFilter)
+
+        bitmap = gpuImage.getBitmapWithFilterApplied(bitcheckpoint)
+        image.setImageBitmap(bitmap)
+    }
     companion object {
 
         @JvmStatic
