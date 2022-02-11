@@ -1,0 +1,33 @@
+{
+  "buildFiles": [
+    "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto\\GPUImage\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\alex_\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto\\GPUImage\\.cxx\\Debug\\186x271c\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\alex_\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto\\GPUImage\\.cxx\\Debug\\186x271c\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "yuv-decoder-Debug-x86": {
+      "artifactName": "yuv-decoder",
+      "buildCommandComponents": [
+        "C:\\Users\\alex_\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+        "-C",
+        "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto\\GPUImage\\.cxx\\Debug\\186x271c\\x86",
+        "yuv-decoder"
+      ],
+      "abi": "x86",
+      "output": "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto\\GPUImage\\build\\intermediates\\cxx\\Debug\\186x271c\\obj\\x86\\libyuv-decoder.so",
+      "runtimeFiles": []
+    }
+  }
+}
