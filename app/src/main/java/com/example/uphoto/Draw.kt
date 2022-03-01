@@ -27,7 +27,7 @@ import top.defaults.colorpicker.ColorPickerPopup.ColorPickerObserver
  * create an instance of this fragment.
  */
 private const val TAG = "main_activity"
-class draw : Fragment() {
+class Draw : Fragment() {
     private lateinit var image: ImageView
     private lateinit var bitmap: Bitmap
     private lateinit var bitcopy: Bitmap
@@ -186,8 +186,8 @@ class draw : Fragment() {
     companion object {
        
         @JvmStatic
-        fun newInstance(): draw{
-            return draw()
+        fun newInstance(): Draw{
+            return Draw()
         }
 
     }

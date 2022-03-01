@@ -45,6 +45,7 @@ class EditMain : Fragment() {
     private lateinit var basicFiltersButton: Button
     private lateinit var finishButton: Button
     private lateinit var drawButton: Button
+    private lateinit var dimensionsButton: Button
     private var dataPasser: OnDataPass? = null
 
     override fun onAttach(context: Context) {
@@ -69,7 +70,8 @@ class EditMain : Fragment() {
 
         finishButton = view.findViewById(R.id.finish_button)
         basicFiltersButton = view.findViewById(R.id.basic_filters)
-        drawButton = view.findViewById(R.id.drawables)
+        drawButton = view.findViewById(R.id.draw)
+        dimensionsButton = view.findViewById(R.id.dimensions)
         finishButton.setOnClickListener {
             context?.let { it1 -> saveImage(bitmap, it1, "Uphoto")
             newFrag("main menu")}
@@ -80,6 +82,9 @@ class EditMain : Fragment() {
         }
         drawButton.setOnClickListener {
             newFrag("draw")
+        }
+        dimensionsButton.setOnClickListener {
+            newFrag("dimensions")
         }
         val activity: MainActivity? = activity as MainActivity?
 

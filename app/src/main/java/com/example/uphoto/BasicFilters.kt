@@ -25,7 +25,7 @@ import jp.co.cyberagent.android.gpuimage.GPUImage
 
 
 private const val TAG = "main_activity"
-class basic_filters : Fragment() {
+class BasicFilters : Fragment() {
     private lateinit var image: ImageView
     private lateinit var bitmap: Bitmap
     private lateinit var bitcheckpoint: Bitmap
@@ -144,8 +144,6 @@ class basic_filters : Fragment() {
         }
 
         val activity: MainActivity? = activity as MainActivity?
-
-
         if (activity != null) {
             ogImage = activity.getbit()!!
         }
@@ -161,7 +159,7 @@ class basic_filters : Fragment() {
     private fun startup()
     {
         allSliderInvisible()
-        brightnessSlider.setVisibility(View.INVISIBLE)
+        brightnessSlider.setVisibility(View.VISIBLE)
     }
     private fun allSliderInvisible()
     {
@@ -265,9 +263,9 @@ class basic_filters : Fragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(): basic_filters
+        fun newInstance(): BasicFilters
         {
-            return basic_filters()
+            return BasicFilters()
         }
 
     }

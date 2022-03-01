@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnDataPass {
         }
         else if (new.equals("basic filters"))
         {
-            val fragment = basic_filters.newInstance()
+            val fragment = BasicFilters.newInstance()
             currentScreen="basic filters"
             swapFrag(fragment)
             Log.d(TAG, "basic filters frag")
@@ -94,8 +94,14 @@ class MainActivity : AppCompatActivity(), OnDataPass {
         }
         else if(new.equals("draw"))
         {
-            val fragment = draw.newInstance()
+            val fragment = Draw.newInstance()
             currentScreen="draw"
+            swapFrag(fragment)
+        }
+        else if(new.equals("dimensions"))
+        {
+            val fragment = Dimensions.newInstance()
+            currentScreen="dimensions"
             swapFrag(fragment)
         }
     }

@@ -29,7 +29,10 @@
     "intermediatesFolder": "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto\\GPUImage\\build\\intermediates\\cxx\\Debug\\186x271c",
     "isDebuggableEnabled": true,
     "validAbiList": [
-      "X86"
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
     ],
     "buildTargetSet": [],
     "implicitBuildTargetSet": [],
@@ -128,7 +131,6 @@
         "rootBuildGradleFolder": "C:\\Users\\alex_\\AndroidStudioProjects\\UPhoto",
         "sdkFolder": "C:\\Users\\alex_\\AppData\\Local\\Android\\Sdk",
         "isBuildOnlyTargetAbiEnabled": true,
-        "ideBuildTargetAbi": "x86",
         "isCmakeBuildCohabitationEnabled": false,
         "isPrefabEnabled": false
       },
