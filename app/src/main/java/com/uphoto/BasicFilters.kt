@@ -1,4 +1,4 @@
-package com.example.uphoto
+package com.uphoto
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
 import jp.co.cyberagent.android.gpuimage.filter.*

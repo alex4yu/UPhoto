@@ -1,28 +1,18 @@
-package com.example.uphoto
+package com.uphoto
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.app.ActivityCompat.startActivityForResult
 
-import android.provider.MediaStore
-
-import android.content.Intent
 import android.view.View
-import android.os.Build
 
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
-import java.io.IOException
 
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.google.android.material.slider.Slider
 
 
 private const val TAG = "main_activity"

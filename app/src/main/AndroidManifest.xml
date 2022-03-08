@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.uphoto">
+    package="com.uphoto">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,14 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UPhoto">
-        <activity
-            android:name=".EditScreen"
-            android:exported="true"
-            android:label="@string/title_activity_edit_screen"
-            android:theme="@style/Theme.UPhoto.NoActionBar" />
-        <activity
-            android:name=".SelectPhoto"
-            android:exported="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -29,6 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>

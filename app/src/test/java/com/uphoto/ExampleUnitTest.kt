@@ -1,4 +1,4 @@
-package com.example.uphoto
+package com.uphoto
 
 import org.junit.Test
 

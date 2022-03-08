@@ -1,4 +1,4 @@
-package com.example.uphoto
+package com.uphoto
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,8 +18,6 @@ import android.content.ContentValues
 
 import android.content.Context
 import android.net.Uri
-import android.view.Gravity
-import android.widget.Toast
 import java.io.OutputStream
 import java.lang.Exception
 

@@ -1,20 +1,29 @@
-package com.example.uphoto
+package com.uphoto
 
+
+import android.app.Activity.RESULT_OK
+import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.core.graphics.rotationMatrix
 import androidx.fragment.app.Fragment
+import com.theartofdev.edmodo.cropper.CropImage
+import java.io.ByteArrayOutputStream
 
 
 class Dimensions : Fragment() {
+
+    val PIC_CROP = 2
     private lateinit var image: ImageView
     private lateinit var ogImage: Bitmap
     private lateinit var bitmap: Bitmap
@@ -24,9 +33,11 @@ class Dimensions : Fragment() {
     private lateinit var yflip: ImageButton
     private  lateinit var right: ImageButton
     private  lateinit var left: ImageButton
+    private lateinit var crop: Button
     private var height = 0
     private var width = 0
     private var dataPasser: OnDataPass? = null
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -34,7 +45,6 @@ class Dimensions : Fragment() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -48,6 +58,7 @@ class Dimensions : Fragment() {
         yflip = view.findViewById(R.id.verticalFlip)
         right = view.findViewById(R.id.rotateRight)
         left = view.findViewById(R.id.rotateLeft)
+        crop = view.findViewById(R.id.crop)
         saveButton = view.findViewById(R.id.save_button)
         cancelButton = view.findViewById(R.id.cancel_button)
         val activity: MainActivity? = activity as MainActivity?
@@ -67,6 +78,9 @@ class Dimensions : Fragment() {
         left.setOnClickListener{
             RotateBitmap(-90F)
         }
+        crop.setOnClickListener{
+            crop()
+        }
         saveButton.setOnClickListener {
             dataPasser?.passBit(bitmap)
             returnToEditMain()
@@ -82,6 +96,9 @@ class Dimensions : Fragment() {
 
         return view
     }
+
+
+
 
     private fun xFlip() {
         val matrix = Matrix()
@@ -110,10 +127,65 @@ class Dimensions : Fragment() {
         image.setImageBitmap(bitmap)
     }
 
+    private fun bitmapToUri():Uri
+    {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path: String = MediaStore.Images.Media.insertImage(
+            requireContext().getContentResolver(),
+            bitmap,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
+
+    }
+
+    private fun crop()
+    {
+        context?.let {
+            CropImage.activity(bitmapToUri())
+                .start(it, this)
+        };
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == RESULT_OK) {
+                val resultUri = result.uri
+
+                image.setImageBitmap(UriToBit(resultUri))
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                val error = result.error
+            }
+        }
+    }
+
     private fun returnToEditMain()
     {
         dataPasser?.onDataPass("edit main")
     }
+
+    fun UriToBit(photoUri: Uri): Bitmap {
+
+        val newbitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri)
+        return newbitmap
+    }
+
+    private fun getContentResolver(): ContentResolver? {
+        val activity: MainActivity? = activity as MainActivity?
+
+        if (activity != null) {
+          return activity.contentResolver
+        }
+        else
+        {
+            return null
+        }
+
+    }
+
     companion object {
 
         @JvmStatic

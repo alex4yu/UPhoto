@@ -1,7 +1,6 @@
-package com.example.uphoto
+package com.uphoto
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
