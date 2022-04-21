@@ -80,8 +80,8 @@ public class GPUImageMonochromeFilter extends GPUImageFilter {
     @Override
     public void onInitialized() {
         super.onInitialized();
-        setIntensity(1.0f);
-        setColor(new float[]{0.6f, 0.45f, 0.3f, 1.f});
+        setIntensity(intensity);
+        setColor(color);
     }
 
     public void setIntensity(final float intensity) {

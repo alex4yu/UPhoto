@@ -10,15 +10,20 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+
 import com.theartofdev.edmodo.cropper.CropImage
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 class Dimensions : Fragment() {
@@ -34,6 +39,8 @@ class Dimensions : Fragment() {
     private  lateinit var right: ImageButton
     private  lateinit var left: ImageButton
     private lateinit var crop: Button
+    private lateinit var revert: Button
+    private lateinit var urisave: Uri
     private var height = 0
     private var width = 0
     private var dataPasser: OnDataPass? = null
@@ -59,6 +66,8 @@ class Dimensions : Fragment() {
         right = view.findViewById(R.id.rotateRight)
         left = view.findViewById(R.id.rotateLeft)
         crop = view.findViewById(R.id.crop)
+        revert = view.findViewById(R.id.revert)
+        revert.setVisibility(INVISIBLE)
         saveButton = view.findViewById(R.id.save_button)
         cancelButton = view.findViewById(R.id.cancel_button)
         val activity: MainActivity? = activity as MainActivity?
@@ -80,6 +89,10 @@ class Dimensions : Fragment() {
         }
         crop.setOnClickListener{
             crop()
+
+        }
+        revert.setOnClickListener{
+            revert()
         }
         saveButton.setOnClickListener {
             dataPasser?.passBit(bitmap)
@@ -91,12 +104,25 @@ class Dimensions : Fragment() {
 
         height = bitmap.height
         width = bitmap.width
+        if (height.toDouble()/width >= 1.75)
+        {
+            setDimensions(image, 1150)
+        }
+        if (height > 1150)
+        {
+            setDimensions(image, 1150)
+        }
         image.setImageBitmap(bitmap)
 
 
         return view
     }
-
+    private fun setDimensions(view: View, height: Int) {
+        val params = view.layoutParams
+        params.height = height
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        view.layoutParams = params
+    }
 
 
 
@@ -143,10 +169,20 @@ class Dimensions : Fragment() {
 
     private fun crop()
     {
+        urisave = bitmapToUri()
         context?.let {
-            CropImage.activity(bitmapToUri())
+            CropImage.activity(urisave)
                 .start(it, this)
-        };
+        }
+
+
+
+    }
+    private fun revert()
+    {
+        image.setImageBitmap(ogImage)
+        bitmap = ogImage
+        revert.setVisibility(INVISIBLE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -154,8 +190,19 @@ class Dimensions : Fragment() {
             val result = CropImage.getActivityResult(data)
             if (resultCode == RESULT_OK) {
                 val resultUri = result.uri
+                revert.setVisibility(VISIBLE)
+                bitmap = UriToBit(resultUri)
+                image.setImageBitmap(bitmap)
+                Log.d("main_activity", "file deletion try")
+                context?.getContentResolver()?.delete(urisave, null,
+                    null);
+                height = bitmap.height
+                width = bitmap.width
+                if (height.toDouble()/width >= 1.75)
+                {
+                    setDimensions(image, 1150)
+                }
 
-                image.setImageBitmap(UriToBit(resultUri))
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
             }

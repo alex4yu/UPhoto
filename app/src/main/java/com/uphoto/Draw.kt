@@ -4,16 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.Bundle
-import android.graphics.Color
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
-import android.view.MotionEvent
-import android.view.View.OnTouchListener
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import androidx.fragment.app.Fragment
 import com.google.android.material.slider.Slider
 import top.defaults.colorpicker.ColorPickerPopup
 import top.defaults.colorpicker.ColorPickerPopup.ColorPickerObserver
@@ -39,8 +42,15 @@ class Draw : Fragment() {
     private lateinit var paint: Paint
     private lateinit var path: Path
     private lateinit var thicknessSlider: Slider
+    private lateinit var penButton: ImageButton
+    private lateinit var brushButton: ImageButton
+    private lateinit var revert: Button
+    private var pen = true
+    private var brush = false
     private var height = 0
     private var width = 0
+    private var layoutH = 0
+    private var layoutW = 0
     private var dataPasser: OnDataPass? = null
     private var mDefaultColor = 0
     private var proportion = 1.0
@@ -71,6 +81,10 @@ class Draw : Fragment() {
         cancelbutton = view.findViewById(R.id.cancel_button)
         colorbutton = view.findViewById(R.id.color_button)
         thicknessSlider = view.findViewById(R.id.thickness)
+        penButton = view.findViewById(R.id.pen)
+        brushButton = view.findViewById(R.id.brush)
+        revert = view.findViewById(R.id.revert)
+        revert.setVisibility(View.INVISIBLE)
         savebutton.setOnClickListener {
             dataPasser?.passBit(bitmap)
             returnToEditMain()
@@ -80,6 +94,19 @@ class Draw : Fragment() {
         }
         colorbutton.setOnClickListener {
             chooseColor()
+        }
+        penButton.setOnClickListener{
+            allFalse()
+            pen = true
+            thicknessSlider.setValue(5f)
+        }
+        revert.setOnClickListener{
+            revert()
+        }
+        brushButton.setOnClickListener{
+            allFalse()
+            brush = true
+            thicknessSlider.setValue(15f)
         }
         thicknessSlider.addOnChangeListener { Slider, value, fromUser ->
             changethickness(value)
@@ -96,13 +123,17 @@ class Draw : Fragment() {
 
         height = bitmap.height
         width = bitmap.width
-        if (width > height)
+        if (height.toDouble()/width >= 1.75)
         {
-            proportion=4.0/3.0
+            setDimensions(image, 1150)
         }
-        Log.d(TAG, "$proportion")
+        if (height > 1150)
+        {
+            setDimensions(image, 1150)
+        }
         image.setImageBitmap(bitmap)
 
+        image.setImageBitmap(bitmap)
         image.setOnTouchListener(handleTouch)
         paint = Paint()
         path = Path()
@@ -111,9 +142,22 @@ class Draw : Fragment() {
         paint.setColor(Color.BLACK)
         paint.setStyle(Paint.Style.STROKE)
         paint.setStrokeJoin(Paint.Join.ROUND)
+        setColorButton()
         Log.d(TAG, "width: $width height: $height")
         return view
 
+    }
+
+    private fun allFalse()
+    {
+        pen = false
+        brush = false
+    }
+    private fun setDimensions(view: View, height: Int) {
+        val params = view.layoutParams
+        params.height = height
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        view.layoutParams = params
     }
     private fun returnToEditMain()
     {
@@ -121,7 +165,22 @@ class Draw : Fragment() {
     }
     @SuppressLint("ClickableViewAccessibility")
     private val handleTouch = OnTouchListener { v, event ->
+        if (layoutH == 0)
+        {
+            layoutH = image.measuredHeight
+            layoutW = image.measuredWidth
+            Log.d(TAG, "width: $layoutW height: $layoutH")
+            proportion = height.toDouble()/layoutH.toDouble()
+        }
+        if(brush)
+        {
+            paint.setAlpha(10)
 
+        }
+        if(pen)
+        {
+            paint.setAlpha(255)
+        }
         when (event.action) {
             MotionEvent.ACTION_DOWN-> {
                 path = Path()
@@ -138,7 +197,16 @@ class Draw : Fragment() {
             }
         }
         draw()
+        revert.setVisibility(View.VISIBLE)
         true
+    }
+    private fun revert()
+    {
+        image.setImageBitmap(ogImage)
+        bitmap = ogImage
+        revert.setVisibility(View.INVISIBLE)
+        bitcopy = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        canvas = Canvas(bitcopy)
     }
     private fun changethickness(value: Float)
     {
@@ -149,7 +217,6 @@ class Draw : Fragment() {
         ColorPickerPopup.Builder(context)
             .initialColor(Color.RED)
             .enableBrightness(true)
-            .enableAlpha(true)
             .okTitle("Choose")
             .cancelTitle("Cancel")
             .showIndicator(true)
@@ -170,12 +237,29 @@ class Draw : Fragment() {
                         // box to returned
                         // color
                         paint.setColor(color)
+                        setColorButton()
                     }
                 }
                 )
+
+     }
+    private fun setColorButton()
+    {
+        colorbutton.setBackgroundColor(paint.color)
+        val total = paint.color.red + paint.color.blue + paint.color.green
+        Log.d("main_activity", "$total")
+        if (total>382)
+        {
+            colorbutton.setTextColor(Color.rgb(0,0,0))
+        }
+        else
+        {
+            colorbutton.setTextColor(Color.rgb(255,255,255))
+        }
     }
     private fun draw()
     {
+
         canvas.drawPath(path, paint)
         image.setImageBitmap(bitcopy)
         bitmap = bitcopy

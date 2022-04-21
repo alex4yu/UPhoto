@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), OnDataPass {
     fun newScreen(new: String){
         if(new.equals("select screen"))
         {
+            currentScreen = "select screen"
             choosePhoto()
         }
         else if(new.equals("edit main"))
@@ -67,12 +68,19 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             swapFrag(fragment)
             Log.d(TAG, "edit main frag")
         }
-        else if (new.equals("basic filters"))
+        else if (new.equals("basic adjust"))
         {
-            val fragment = BasicFilters.newInstance()
-            currentScreen="basic filters"
+            val fragment = BasicAdjust.newInstance()
+            currentScreen="basic adjust"
             swapFrag(fragment)
-            Log.d(TAG, "basic filters frag")
+
+        }
+        else if (new.equals("basic filter"))
+        {
+            val fragment = BasicFilter.newInstance()
+            currentScreen="basic filter"
+            swapFrag(fragment)
+
         }
         else if (new.equals("main menu"))
         {
@@ -95,6 +103,11 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             val fragment = Dimensions.newInstance()
             currentScreen="dimensions"
             swapFrag(fragment)
+        }
+        else if (new.equals("weird filter"))
+        {
+            currentScreen = "weird filter"
+            choosePhoto()
         }
     }
     fun swapFrag(fragment: Fragment)
@@ -149,10 +162,17 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             // Load the image located at photoUri into selectedImage
             currentimage = loadFromUri(photoUri!!)
 
+            if (currentScreen.equals("select screen"))
+            {
+                val fragment = SelectPhoto.newInstance()
+                swapFrag(fragment)
+            }
+            else if(currentScreen.equals("weird filter"))
+            {
+                val fragment = weirdFilter.newInstance()
+                swapFrag(fragment)
+            }
 
-            val fragment = SelectPhoto.newInstance()
-            currentScreen = "select screen"
-            swapFrag(fragment)
 
 
         }

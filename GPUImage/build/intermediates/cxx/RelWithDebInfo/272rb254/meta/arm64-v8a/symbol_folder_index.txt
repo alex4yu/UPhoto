@@ -1,1 +1,0 @@
-C:\Users\alex_\AndroidStudioProjects\UPhoto\GPUImage\build\intermediates\cxx\RelWithDebInfo\272rb254\obj\arm64-v8a

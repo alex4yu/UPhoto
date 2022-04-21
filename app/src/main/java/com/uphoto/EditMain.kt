@@ -44,6 +44,9 @@ class EditMain : Fragment() {
     private lateinit var finishButton: Button
     private lateinit var drawButton: Button
     private lateinit var dimensionsButton: Button
+    private lateinit var basicAdjustButton: Button
+    private var height = 0
+    private var width = 0
     private var dataPasser: OnDataPass? = null
 
     override fun onAttach(context: Context) {
@@ -70,19 +73,23 @@ class EditMain : Fragment() {
         basicFiltersButton = view.findViewById(R.id.basic_filters)
         drawButton = view.findViewById(R.id.draw)
         dimensionsButton = view.findViewById(R.id.dimensions)
+        basicAdjustButton = view.findViewById(R.id.adjust)
         finishButton.setOnClickListener {
             context?.let { it1 -> saveImage(bitmap, it1, "Uphoto")
             newFrag("main menu")}
 
         }
-        basicFiltersButton.setOnClickListener {
-            newFrag("basic filters")
+        basicAdjustButton.setOnClickListener {
+            newFrag("basic adjust")
         }
         drawButton.setOnClickListener {
             newFrag("draw")
         }
         dimensionsButton.setOnClickListener {
             newFrag("dimensions")
+        }
+        basicFiltersButton.setOnClickListener {
+            newFrag("basic filter")
         }
         val activity: MainActivity? = activity as MainActivity?
 
@@ -91,9 +98,24 @@ class EditMain : Fragment() {
             ogImage = activity.getbit()!!
         }
         bitmap = ogImage
-
+        height = bitmap.height
+        width = bitmap.width
+        if (height.toDouble()/width >= 1.75)
+        {
+            setDimensions(image, 1150)
+        }
+        if (height > 1150)
+        {
+            setDimensions(image, 1150)
+        }
         image.setImageBitmap(bitmap)
         return view
+    }
+    private fun setDimensions(view: View, height: Int) {
+        val params = view.layoutParams
+        params.height = height
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        view.layoutParams = params
     }
     private fun newFrag(name: String)
     {

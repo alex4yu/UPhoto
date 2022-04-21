@@ -21,7 +21,8 @@ private const val TAG = "main_activity"
 class MainMenu : Fragment() {
 
 
-    private lateinit var selectbutton: Button
+    private lateinit var normalEdit: Button
+    private lateinit var weirdFilter: Button
     private lateinit var appname: TextView
 
     private var dataPasser: OnDataPass? = null
@@ -41,9 +42,17 @@ class MainMenu : Fragment() {
 
 
     }
-    fun onClick(view: View)
+    fun onClick(view: String)
     {
-      passData("select screen")
+      if(view.equals("normal edit"))
+      {
+          passData("select screen")
+      }
+      else if(view.equals("weird filter"))
+      {
+          passData("weird filter")
+      }
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +60,14 @@ class MainMenu : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main_menu, container, false)
-        selectbutton = view.findViewById(R.id.select_button)
+        normalEdit = view.findViewById(R.id.normal)
         appname = view.findViewById(R.id.textView)
-        selectbutton.setOnClickListener{
-            onClick(selectbutton)
+        weirdFilter = view.findViewById(R.id.filter)
+        normalEdit.setOnClickListener{
+            onClick("normal edit")
+        }
+        weirdFilter.setOnClickListener{
+            onClick("weird filter")
         }
 
         Log.d(TAG, "view create")

@@ -16,23 +16,34 @@
         android:layout_marginTop="20dp"
         android:text="@string/uphoto"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/select_button"
+        app:layout_constraintBottom_toTopOf="@+id/normal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.042" />
 
     <Button
-        android:id="@+id/select_button"
+        android:id="@+id/normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/select_photo"
+        android:text="Normal Edits"
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.212" />
+
+    <Button
+        android:id="@+id/filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Filters"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/normal" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

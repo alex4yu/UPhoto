@@ -1,1 +1,0 @@
-C:\Users\alex_\AndroidStudioProjects\UPhoto\GPUImage\build\intermediates\cxx\Debug\186x271c\obj\x86_64
