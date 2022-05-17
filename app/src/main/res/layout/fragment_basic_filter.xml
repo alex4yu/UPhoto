@@ -30,24 +30,58 @@
                 android:id="@+id/brilliant"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:padding="5dp"
                 android:scaleType="fitXY" />
 
             <ImageButton
                 android:id="@+id/brilliantCool"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:padding="5dp"
                 android:scaleType="fitXY" />
 
             <ImageButton
                 android:id="@+id/brilliantWarm"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:padding="5dp"
                 android:scaleType="fitXY" />
 
             <ImageButton
-                android:id="@+id/dramatic"
+                android:id="@+id/cinematic"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:padding="5dp"
+                android:scaleType="fitXY" />
+            <ImageButton
+                android:id="@+id/cinematicCool"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:padding="5dp"
+                android:scaleType="fitXY" />
+            <ImageButton
+                android:id="@+id/cinematicWarm"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:padding="5dp"
+                android:scaleType="fitXY" />
+            <ImageButton
+                android:id="@+id/vignette"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:padding="5dp"
+                android:scaleType="fitXY" />
+            <ImageButton
+                android:id="@+id/monochrome"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:padding="5dp"
+                android:scaleType="fitXY" />
+            <ImageButton
+                android:id="@+id/silverLuster"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:padding="5dp"
                 android:scaleType="fitXY" />
 
         </LinearLayout>

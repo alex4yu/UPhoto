@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "UPhoto"
 include ':app'
 include ':GPUImage'
+include ':MLKit'

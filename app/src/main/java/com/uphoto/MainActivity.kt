@@ -82,6 +82,13 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             swapFrag(fragment)
 
         }
+        else if (new.equals("face filter"))
+        {
+            val fragment = FaceFilter.newInstance()
+            currentScreen="face filter"
+            choosePhoto()
+
+        }
         else if (new.equals("main menu"))
         {
             val toast = Toast.makeText(this,"photo saved", Toast.LENGTH_LONG )
@@ -170,6 +177,11 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             else if(currentScreen.equals("weird filter"))
             {
                 val fragment = weirdFilter.newInstance()
+                swapFrag(fragment)
+            }
+            else if(currentScreen.equals("face filter"))
+            {
+                val fragment = FaceFilter.newInstance()
                 swapFrag(fragment)
             }
 

@@ -44,9 +44,11 @@ class Draw : Fragment() {
     private lateinit var thicknessSlider: Slider
     private lateinit var penButton: ImageButton
     private lateinit var brushButton: ImageButton
+    private lateinit var neonPenButton: ImageButton
     private lateinit var revert: Button
     private var pen = true
     private var brush = false
+    private var neon = false
     private var height = 0
     private var width = 0
     private var layoutH = 0
@@ -54,6 +56,7 @@ class Draw : Fragment() {
     private var dataPasser: OnDataPass? = null
     private var mDefaultColor = 0
     private var proportion = 1.0
+    private lateinit var currentColor: Color
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -83,6 +86,7 @@ class Draw : Fragment() {
         thicknessSlider = view.findViewById(R.id.thickness)
         penButton = view.findViewById(R.id.pen)
         brushButton = view.findViewById(R.id.brush)
+        neonPenButton = view.findViewById(R.id.neon)
         revert = view.findViewById(R.id.revert)
         revert.setVisibility(View.INVISIBLE)
         savebutton.setOnClickListener {
@@ -107,6 +111,11 @@ class Draw : Fragment() {
             allFalse()
             brush = true
             thicknessSlider.setValue(15f)
+        }
+        neonPenButton.setOnClickListener{
+            allFalse()
+            neon = true
+            thicknessSlider.setValue(10f)
         }
         thicknessSlider.addOnChangeListener { Slider, value, fromUser ->
             changethickness(value)
@@ -139,7 +148,8 @@ class Draw : Fragment() {
         path = Path()
         paint.setAntiAlias(true)
         paint.setStrokeWidth(5f)
-        paint.setColor(Color.BLACK)
+        paint.setColor(Color.GREEN)
+        currentColor = Color.valueOf(Color.GREEN)
         paint.setStyle(Paint.Style.STROKE)
         paint.setStrokeJoin(Paint.Join.ROUND)
         setColorButton()
@@ -152,6 +162,7 @@ class Draw : Fragment() {
     {
         pen = false
         brush = false
+        neon = false
     }
     private fun setDimensions(view: View, height: Int) {
         val params = view.layoutParams
@@ -172,23 +183,15 @@ class Draw : Fragment() {
             Log.d(TAG, "width: $layoutW height: $layoutH")
             proportion = height.toDouble()/layoutH.toDouble()
         }
-        if(brush)
-        {
-            paint.setAlpha(10)
 
-        }
-        if(pen)
-        {
-            paint.setAlpha(255)
-        }
+
         when (event.action) {
             MotionEvent.ACTION_DOWN-> {
                 path = Path()
                 path.moveTo((event.x*proportion).toFloat(), (event.y*proportion).toFloat())
                 var xcord = event.x
                 var ycord = event.y
-                Log.d(TAG, "start $xcord, $ycord")
-            }
+                            }
             MotionEvent.ACTION_MOVE-> path.lineTo((event.x*proportion).toFloat(), (event.y*proportion).toFloat())
             MotionEvent.ACTION_UP-> {
                 var xcord = event.x
@@ -196,7 +199,36 @@ class Draw : Fragment() {
                 Log.d(TAG, "end $xcord, $ycord")
             }
         }
-        draw()
+        if(brush)
+        {
+            paint.setColor(currentColor.toArgb())
+            paint.setAlpha(10)
+            draw()
+        }
+        if(pen)
+        {
+            paint.setColor(currentColor.toArgb())
+            paint.setAlpha(255)
+            draw()
+        }
+        if(neon)
+        {
+            paint.setColor(currentColor.toArgb())
+            paint.setStrokeWidth(paint.strokeWidth+30)
+            paint.setAlpha(3)
+            draw()
+            paint.setStrokeWidth(paint.strokeWidth-5)
+            paint.setAlpha(5)
+            draw()
+            paint.setStrokeWidth(paint.strokeWidth-20)
+            paint.setAlpha(255)
+            draw()
+            paint.setStrokeWidth(paint.strokeWidth-5)
+            paint.setAlpha(255)
+            paint.setColor(Color.WHITE)
+            draw()
+        }
+
         revert.setVisibility(View.VISIBLE)
         true
     }
@@ -215,7 +247,7 @@ class Draw : Fragment() {
     private fun chooseColor()
     {
         ColorPickerPopup.Builder(context)
-            .initialColor(Color.RED)
+            .initialColor(paint.color)
             .enableBrightness(true)
             .okTitle("Choose")
             .cancelTitle("Cancel")
@@ -237,6 +269,7 @@ class Draw : Fragment() {
                         // box to returned
                         // color
                         paint.setColor(color)
+                        currentColor = Color.valueOf(color)
                         setColorButton()
                     }
                 }

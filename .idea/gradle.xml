@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/GPUImage" />
+            <option value="$PROJECT_DIR$/MLKit" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

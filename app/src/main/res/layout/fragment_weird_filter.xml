@@ -96,6 +96,12 @@
                 android:text="Deep Fry" />
 
             <Button
+                android:id="@+id/flower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test"
+                android:layout_marginRight="120dp"/>
+            <Button
                 android:id="@+id/test"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

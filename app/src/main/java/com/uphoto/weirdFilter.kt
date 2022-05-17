@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.*
 import java.io.OutputStream
-import java.lang.Exception
 
 
 class weirdFilter : Fragment() {
@@ -31,7 +30,7 @@ class weirdFilter : Fragment() {
     private lateinit var eightbit: ImageButton
     private lateinit var toon: Button
     private lateinit var deepFry: Button
-    private lateinit var test: Button
+    private lateinit var flower: Button
     private lateinit var revert: Button
     private lateinit var finish: Button
     private var height = 0
@@ -58,7 +57,7 @@ class weirdFilter : Fragment() {
         eightbit = view.findViewById(R.id.eightbit)
         toon = view.findViewById(R.id.toon)
         deepFry = view.findViewById(R.id.deepfry)
-        test = view.findViewById(R.id.test)
+        flower = view.findViewById(R.id.flower)
         revert = view.findViewById(R.id.revert)
         finish = view.findViewById(R.id.finish_button)
         invert.setOnClickListener{
@@ -76,8 +75,8 @@ class weirdFilter : Fragment() {
         deepFry.setOnClickListener {
             deepFry()
         }
-        test.setOnClickListener {
-            test()
+        flower.setOnClickListener {
+            putflower()
         }
         revert.setOnClickListener{
             revert()
@@ -103,15 +102,99 @@ class weirdFilter : Fragment() {
         image.setImageBitmap(ogImage)
         bitmap = ogImage
     }
-    private fun test()
+    private fun putflower()
     {
         var ret: Bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        val gpuImage = GPUImage(context)
-        val filter = GPUImageSketchFilter()
-        gpuImage.setFilter(filter)
+        val flower1 = BitmapFactory.decodeResource(
+            requireContext().resources,
+            R.drawable.flower1
+        )
+        val flower2 = BitmapFactory.decodeResource(
+            requireContext().resources,
+            R.drawable.flower2
+        )
+        val matrix1 = Matrix()
+        val scale1w = 100f/flower1.width
+        val scale1h = 100f/flower1.height
+        matrix1.postScale(scale1w, scale1h)
+        val resizedflower1 = Bitmap.createBitmap(
+            flower1, 0, 0, flower1.width, flower1.height, matrix1, false
+        )
+        val matrix2 = Matrix()
+        val scale2w = 100f/flower2.width
+        val scale2h = 100f/flower2.height
+        matrix2.postScale(scale2w, scale2h)
+        val resizedflower2 = Bitmap.createBitmap(
+            flower2, 0, 0, flower2.width, flower2.height, matrix2, false
+        )
+        val canvas = Canvas(ret)
+        val paint = Paint(Paint.FILTER_BITMAP_FLAG)
+        var x = 0
+        var y = 0
+        var flower_1 = true
+        while (x+100<width)
+        {
+            if (flower_1)
+            {
+                canvas.drawBitmap(resizedflower1, x.toFloat(), 0f, paint)
+                flower_1 = false
+            }
+            else
+            {
+                canvas.drawBitmap(resizedflower2, x.toFloat(), 0f, paint)
+                flower_1 = true
+            }
+            x=x+100
+        }
+        while (y+100<height)
+        {
+            if (flower_1)
+            {
+                canvas.drawBitmap(resizedflower1, width-100f, y.toFloat(), paint)
+                flower_1 = false
+            }
+            else
+            {
+                canvas.drawBitmap(resizedflower2, width-100f, y.toFloat(), paint)
+                flower_1 = true
+            }
+            y=y+100
+        }
+        while (x>0)
+        {
+            if (flower_1)
+            {
+                canvas.drawBitmap(resizedflower1, x.toFloat(), height-100f, paint)
+                flower_1 = false
+            }
+            else
+            {
+                canvas.drawBitmap(resizedflower2, x.toFloat(), height-100f, paint)
+                flower_1 = true
+            }
+            x=x-100
+        }
+        while (y>0)
+        {
+            if (flower_1)
+            {
+                canvas.drawBitmap(resizedflower1, 0f, y.toFloat(), paint)
+                flower_1 = false
+            }
+            else
+            {
+                canvas.drawBitmap(resizedflower2, 0f, y.toFloat(), paint)
+                flower_1 = true
+            }
+            y=y-100
+        }
 
-        bitmap = gpuImage.getBitmapWithFilterApplied(ret)
-        image.setImageBitmap(bitmap)
+        image.setImageBitmap(ret)
+    }
+
+    private fun test()
+    {
+
     }
     private fun invert()
     {

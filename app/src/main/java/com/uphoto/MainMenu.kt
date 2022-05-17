@@ -23,6 +23,7 @@ class MainMenu : Fragment() {
 
     private lateinit var normalEdit: Button
     private lateinit var weirdFilter: Button
+    private lateinit var faceFilter: Button
     private lateinit var appname: TextView
 
     private var dataPasser: OnDataPass? = null
@@ -52,6 +53,10 @@ class MainMenu : Fragment() {
       {
           passData("weird filter")
       }
+      else if(view.equals("face filter"))
+      {
+          passData("face filter")
+      }
 
     }
     override fun onCreateView(
@@ -63,13 +68,16 @@ class MainMenu : Fragment() {
         normalEdit = view.findViewById(R.id.normal)
         appname = view.findViewById(R.id.textView)
         weirdFilter = view.findViewById(R.id.filter)
+        faceFilter = view.findViewById(R.id.face_filter)
         normalEdit.setOnClickListener{
             onClick("normal edit")
         }
         weirdFilter.setOnClickListener{
             onClick("weird filter")
         }
-
+        faceFilter.setOnClickListener{
+            onClick("face filter")
+        }
         Log.d(TAG, "view create")
 
         return view
@@ -78,8 +86,6 @@ class MainMenu : Fragment() {
 
     companion object {
 
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
         fun newInstance():MainMenu{
             return MainMenu()
         }
