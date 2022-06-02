@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), OnDataPass {
     private lateinit var currentScreen: String
     private  var currentimage: Bitmap? = null
     private lateinit var image: Bitmap
+    private var photoFinished = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "before set layout")
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity(), OnDataPass {
     override fun passBit(bitmap: Bitmap) {
         currentimage = bitmap
     }
+
+
 
 
     fun newScreen(new: String){
@@ -94,6 +97,15 @@ class MainActivity : AppCompatActivity(), OnDataPass {
             val toast = Toast.makeText(this,"photo saved", Toast.LENGTH_LONG )
             toast.setGravity(Gravity.TOP, 0, 0)
             toast.show()
+
+            val fragment = MainMenu.newInstance()
+            currentScreen="main menu"
+            swapFrag(fragment)
+
+        }
+        else if (new.equals("main menu alt"))
+        {
+
             val fragment = MainMenu.newInstance()
             currentScreen="main menu"
             swapFrag(fragment)
@@ -171,7 +183,7 @@ class MainActivity : AppCompatActivity(), OnDataPass {
 
             if (currentScreen.equals("select screen"))
             {
-                val fragment = SelectPhoto.newInstance()
+                val fragment = EditMain.newInstance()
                 swapFrag(fragment)
             }
             else if(currentScreen.equals("weird filter"))

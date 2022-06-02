@@ -33,6 +33,7 @@ class weirdFilter : Fragment() {
     private lateinit var flower: Button
     private lateinit var revert: Button
     private lateinit var finish: Button
+    private lateinit var home: ImageButton
     private var height = 0
     private var width = 0
     private var dataPasser: OnDataPass? = null
@@ -60,6 +61,10 @@ class weirdFilter : Fragment() {
         flower = view.findViewById(R.id.flower)
         revert = view.findViewById(R.id.revert)
         finish = view.findViewById(R.id.finish_button)
+        home = view.findViewById(R.id.home)
+        home.setOnClickListener{
+            newFrag("main menu alt")
+        }
         invert.setOnClickListener{
             invert()
         }
@@ -92,10 +97,26 @@ class weirdFilter : Fragment() {
         }
         bitmap = ogImage
         bitcheckpoint = ogImage
-        image.setImageBitmap(bitmap)
+
         height = bitmap.height
         width = bitmap.width
+        if (height.toDouble()/width >= 1.75)
+        {
+            setDimensions(image, 1150)
+        }
+        if (height > 1150)
+        {
+            setDimensions(image, 1150)
+        }
+
+        image.setImageBitmap(bitmap)
         return view
+    }
+    private fun setDimensions(view: View, height: Int) {
+        val params = view.layoutParams
+        params.height = height
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        view.layoutParams = params
     }
     private fun revert()
     {

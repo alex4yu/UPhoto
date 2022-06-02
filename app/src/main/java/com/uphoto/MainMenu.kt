@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 
 
@@ -24,7 +25,7 @@ class MainMenu : Fragment() {
     private lateinit var normalEdit: Button
     private lateinit var weirdFilter: Button
     private lateinit var faceFilter: Button
-    private lateinit var appname: TextView
+    private lateinit var appname: ImageView
 
     private var dataPasser: OnDataPass? = null
 
@@ -66,7 +67,7 @@ class MainMenu : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main_menu, container, false)
         normalEdit = view.findViewById(R.id.normal)
-        appname = view.findViewById(R.id.textView)
+        appname = view.findViewById(R.id.name)
         weirdFilter = view.findViewById(R.id.filter)
         faceFilter = view.findViewById(R.id.face_filter)
         normalEdit.setOnClickListener{

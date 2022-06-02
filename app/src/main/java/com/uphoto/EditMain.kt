@@ -18,6 +18,7 @@ import android.content.ContentValues
 
 import android.content.Context
 import android.net.Uri
+import android.widget.ImageButton
 import java.io.OutputStream
 import java.lang.Exception
 
@@ -45,6 +46,7 @@ class EditMain : Fragment() {
     private lateinit var drawButton: Button
     private lateinit var dimensionsButton: Button
     private lateinit var basicAdjustButton: Button
+    private lateinit var home: ImageButton
     private var height = 0
     private var width = 0
     private var dataPasser: OnDataPass? = null
@@ -74,6 +76,10 @@ class EditMain : Fragment() {
         drawButton = view.findViewById(R.id.draw)
         dimensionsButton = view.findViewById(R.id.dimensions)
         basicAdjustButton = view.findViewById(R.id.adjust)
+        home = view.findViewById(R.id.home)
+        home.setOnClickListener{
+            newFrag("main menu alt")
+        }
         finishButton.setOnClickListener {
             context?.let { it1 -> saveImage(bitmap, it1, "Uphoto")
             newFrag("main menu")}
