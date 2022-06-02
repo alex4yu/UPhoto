@@ -1,0 +1,1 @@
+C:\Users\alex_\AndroidStudioProjects\UPhoto\GPUImage\src\main\cpp\CMakeLists.txt
